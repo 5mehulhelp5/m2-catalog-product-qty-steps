@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+use Infrangible\CatalogProductQtySteps\Block\Cart\QtySteps;
+use Magento\Framework\View\TemplateEngine\Php;
+
+/**
+ * @author      Andreas Knollmann
+ * @copyright   2014-2025 Softwareentwicklung Andreas Knollmann
+ * @license     http://www.opensource.org/licenses/mit-license.php MIT
+ */
+
+/** @var Php $this */
+/** @var QtySteps $block */
+?>
+
+<?php /** @var Magento\Quote\Model\Quote\Item $item */ ?>
+<?php foreach ($block->getItems() as $item): ?>
+    <?php if ($block->hasItemQtySteps($item)): ?>
+        <script type="text/x-magento-init">
+            {
+                "#cart-<?= /* @noEscape */ $item->getId(); ?>-qty": {
+                    "productQtySteps": {
+                        "itemId": <?= /* @noEscape */ $item->getId(); ?>,
+                        "productId": <?= /* @noEscape */ $block->getItemProduct($item)->getId(); ?>,
+                        "steps": <?= /* @noEscape */ $block->getItemQtySteps($item); ?>
+                    }
+                }
+            }
+        </script>
+    <?php endif; ?>
+<?php endforeach; ?>
