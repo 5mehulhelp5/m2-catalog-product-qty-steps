@@ -15,7 +15,9 @@ define([
     var globalOptions = {
         productId: 0,
         itemId: 0,
-        steps: {}
+        steps: {},
+        formIdentifier: '#product_addtocart_form',
+        qtyIdentifier: '.box-tocart .field.qty #qty'
     };
 
     $.widget('mage.productQtySteps', {
@@ -28,19 +30,20 @@ define([
             var self = this;
 
             domReady(function() {
-                var qtyNode = $('#product_addtocart_form .box-tocart .field.qty #qty');
+                var form = $(self.options.formIdentifier);
+                var qty = $(self.options.qtyIdentifier, form);
                 var name = 'qty_steps';
                 var id = 'qty-steps';
 
-                if (qtyNode.length === 0 && self.options.itemId > 0) {
-                    qtyNode = $('#cart-' + self.options.itemId + '-qty');
+                if (qty.length === 0 && self.options.itemId > 0) {
+                    qty = $('#cart-' + self.options.itemId + '-qty');
                     name = 'qty_steps_' + self.options.itemId;
                     id = 'qty-steps-' + self.options.itemId;
                 }
 
-                var qtyValue = parseInt($(qtyNode).val());
+                var qtyValue = parseInt($(qty).val());
 
-                $(qtyNode).hide();
+                $(qty).hide();
 
                 var qtySelect = $('<select>', {
                     name: name,
@@ -63,21 +66,24 @@ define([
                 });
 
                 qtySelect.on('change', function() {
-                    if ($(qtyNode).val() !== $(this).val()) {
-                        $(qtyNode).val($(this).val());
-                        $(qtyNode).trigger('input');
+                    if ($(qty).val() !== $(this).val()) {
+                        $(qty).val($(this).val());
+                        $(qty).trigger('input');
                     }
                 });
 
-                $(qtyNode).after(qtySelect);
+                $(qty).after(qtySelect);
 
                 if (! selected) {
-                    $(qtyNode).val($(this).val());
+                    $(qty).val($(this).val());
                 }
 
-                $(qtyNode).trigger('input');
+                $(qty).trigger('input');
 
                 qtySelect.trigger('change');
+
+                $('body').trigger('qty-steps-initialized', [qtySelect, qty]);
+                form.trigger('form-qty-steps-initialized', [qtySelect, qty]);
 
                 var priceBoxes = $('[data-role="priceBox"]');
 
