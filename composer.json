@@ -2,7 +2,7 @@
     "name": "infrangible/m2-catalog-product-qty-steps",
     "description": "Infrangible Magento 2 Catalog Product Qty Steps",
     "type": "magento2-module",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "license": "MIT",
     "keywords": [
         "Magento"
